@@ -18,8 +18,8 @@ This is just a small finger exercise to get familiar with the algebraic rules of
 - [x] normalization
 - [x] vector extraction
 - [x] scalar extraction
-- [ ] _inverse_
-- [ ] _division_
+- [x] inverse
+- [ ] _negation_
 - [ ] _Euler angle representation_
 
 # Further improvements

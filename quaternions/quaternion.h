@@ -28,6 +28,7 @@ namespace quaternions {
         xyz extract_vector() const;
         double extract_scalar() const;
         rotation to_rotation() const;
+        quaternion inverse() const;
         quaternion conjugated() const;
         quaternion cross(const quaternion& other) const;
         double dot(const quaternion& other) const;

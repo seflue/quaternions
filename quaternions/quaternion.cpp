@@ -55,6 +55,17 @@ q::rotation quaternions::quaternion::to_rotation() const {
     };
 }
 
+q::quaternion q::quaternion::inverse() const {
+    const auto amplitude_squared = w * w + x * x + y * y + z * z;
+    const auto conj = conjugated();
+    return quaternion{
+        conj.w / amplitude_squared,
+        conj.x / amplitude_squared,
+        conj.y / amplitude_squared,
+        conj.z / amplitude_squared
+    };
+}
+
 q::quaternion q::quaternion::conjugated() const {
     return q::quaternion{w, -x, -y, -z};
 }

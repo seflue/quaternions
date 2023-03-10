@@ -129,6 +129,15 @@ TEST_CASE("dot product (euclidean inner product)") {
     CHECK_THAT(qy.dot(qz), WithinAbs(0, 1E-6));
 }
 
+TEST_CASE("inverse quaternion")
+{
+    const auto q = q::quaternion{1, 2, 3, 4};
+    CHECK_THAT(q.inverse(), WithinAbs(q::quaternion{1/30.0, -1/15.0, -0.1, -2/15.0}));
+    const auto qn = q.normalize();
+    CHECK_THAT(qn.inverse(), WithinAbs(qn.conjugated()));
+    CHECK_THAT(qn * qn.inverse(), WithinAbs(q::quaternion{1, 0, 0, 0}));
+}
+
 TEST_CASE("conjugate quaternion")
 {
     const auto q = q::quaternion{1, 1, 1, 1};

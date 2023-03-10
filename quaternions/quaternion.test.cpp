@@ -41,11 +41,13 @@ auto WithinAbs(const q::quaternion& quaternion, double eps = 1E-12) -> WithinAbs
 
 TEST_CASE("initialize quaternion from vector")
 {
-    const auto q = q::quaternion::from_vector(q::xyz{1, 1, 1});
-    const quaternions::xyz v = q.to_xyz().value();
+    const auto q = q::quaternion::from_vector(q::xyz{1, 2, 3});
+    const quaternions::xyz v = q.extract_vector();
+    const auto s = q.extract_scalar();
+    CHECK(s == 0);
     CHECK(v.x == 1);
-    CHECK(v.y == 1);
-    CHECK(v.z == 1);
+    CHECK(v.y == 2);
+    CHECK(v.z == 3);
 }
 
 TEST_CASE("initialize quaternion from rotation")

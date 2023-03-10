@@ -35,6 +35,16 @@ std::optional<q::xyz> q::quaternion::to_xyz() const
         return xyz{x, y, z};
 }
 
+q::xyz q::quaternion::extract_vector() const
+{
+    return xyz{x, y, z};
+}
+
+double q::quaternion::extract_scalar() const
+{
+    return w;
+}
+
 q::rotation quaternions::quaternion::to_rotation() const {
     return rotation{
         xyz{

@@ -1,5 +1,6 @@
 #include "quaternion.h"
 #include <cmath>
+#include <string>
 
 namespace q = quaternions;
 
@@ -14,6 +15,16 @@ q::quaternion q::quaternion::from_rotation(rotation r) {
         r.axis.y * sin(r.angle / 2.),
         r.axis.z * sin(r.angle / 2.)
     };
+}
+
+std::string q::quaternion::to_string() const
+{
+    return std::string("{ ") +
+        "w: " + std::to_string(w) + ", " +
+        "x: " + std::to_string(x) + ", " +
+        "y: " + std::to_string(y) + ", " +
+        "z: " + std::to_string(z) +
+        " }";
 }
 
 std::optional<q::xyz> q::quaternion::to_xyz() const
@@ -38,6 +49,37 @@ q::quaternion q::quaternion::conjugated() const {
     return q::quaternion{w, -x, -y, -z};
 }
 
+q::quaternion q::quaternion::cross(const quaternion& other) const {
+    return quaternion{
+            0,
+            this->y * other.z - this->z * other.y,
+            this->z * other.x - this->x * other.z,
+            this->x * other.y - this->y * other.x,
+    };
+}
+
+double q::quaternion::dot(const quaternion &other) const {
+    return
+            this->w * other.w +
+            this->x * other.x +
+            this->y * other.y +
+            this->z * other.z;
+}
+
+double q::quaternion::norm() const {
+    return sqrt(w * w + x * x + y * y + z * z);
+}
+
+q::quaternion q::quaternion::normalize() const {
+    const auto t_norm = norm();
+    return quaternion{
+            w / t_norm,
+            x / t_norm,
+            y / t_norm,
+            z / t_norm
+    };
+}
+
 q::quaternion q::operator+(const quaternion& a, const quaternion& b)
 {
     return q::quaternion{a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z};
@@ -57,23 +99,27 @@ q::quaternion q::operator*(const quaternion& a, const quaternion& b) {
     };
 }
 
-q::quaternion q::quaternion::cross(const quaternion& other) const {
-    return quaternion{
-        0,
-        this->y * other.z - this->z * other.y,
-        this->z * other.x - this->x * other.z,
-        this->x * other.y - this->y * other.x,
+q::quaternion q::operator*(const quaternion& q, const double s) {
+    return q::quaternion{
+        q.w * s,
+        q.x * s,
+        q.y * s,
+        q.z * s,
     };
 }
 
-double q::quaternion::dot(const quaternion &other) const {
-    return
-        this->w * other.w +
-        this->x * other.x +
-        this->y * other.y +
-        this->z * other.z;
+q::quaternion q::operator*(const double s, const quaternion &q) {
+    return q * s;
 }
 
-double q::quaternion::norm() const {
-    return sqrt(w * w + x * x + y * y + z * z);
+bool q::almost_equal(double a, double b, double eps) {
+    return std::abs(a - b) < eps;
+}
+
+bool q::almost_equal(const q::quaternion& a, const q::quaternion& b, double eps) {
+    return
+        almost_equal(a.w, b.w, eps) &&
+        almost_equal(a.x, b.x, eps) &&
+        almost_equal(a.y, b.y, eps) &&
+        almost_equal(a.z, b.z, eps);
 }

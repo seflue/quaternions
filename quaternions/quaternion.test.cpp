@@ -1,11 +1,43 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <catch2/matchers/catch_matchers_templated.hpp>
 #include "quaternion.h"
 #include <cmath>
 
 namespace q = quaternions;
 using Catch::Matchers::WithinRel;
 using Catch::Matchers::WithinAbs;
+
+namespace Catch{
+    template<>
+    struct StringMaker<q::quaternion> {
+        static std::string convert(const q::quaternion& q) {
+            return q.to_string();
+        }
+    };
+}
+
+struct WithinAbsQuaternionMatcher : Catch::Matchers::MatcherGenericBase {
+    WithinAbsQuaternionMatcher(q::quaternion const& quaternion, double eps)
+        : quaternion{quaternion}, eps{eps} {}
+
+    template<typename OtherQuaternion>
+    bool match(OtherQuaternion const& other) const {
+        return q::almost_equal(quaternion, other, eps);
+    }
+
+    std::string describe() const override {
+        return "Equals: " + quaternion.to_string();
+    }
+
+private:
+    const q::quaternion& quaternion;
+    const double eps;
+};
+
+auto WithinAbs(const q::quaternion& quaternion, double eps = 1E-12) -> WithinAbsQuaternionMatcher {
+    return WithinAbsQuaternionMatcher{quaternion, eps};
+}
 
 TEST_CASE("initialize quaternion from vector")
 {
@@ -48,15 +80,19 @@ TEST_CASE("subtract two quaternions")
     CHECK_THAT(vab.z, WithinRel(0, 1E-6));
 }
 
+TEST_CASE("multiply quaternion with scalar")
+{
+    const auto q = q::quaternion{1, 2, 3, 4};
+    const auto s = 2.0;
+    CHECK_THAT(q * s, WithinAbs(s * q));
+    CHECK_THAT(q * s, WithinAbs(q::quaternion{2, 4, 6, 8}));
+}
+
 TEST_CASE("common multiplication (Grassmann product)")
 {
     const auto qa = q::quaternion{0.1, 0.2, 0.3, 0.4};
     const auto qb = q::quaternion{0.2, 0.3, 0.4, 0.5};
-    const auto qab = qa * qb;
-    CHECK_THAT(qab.w, WithinRel(-0.36));
-    CHECK_THAT(qab.x, WithinRel(0.06));
-    CHECK_THAT(qab.y, WithinRel(0.12));
-    CHECK_THAT(qab.z, WithinRel(0.12));
+    CHECK_THAT(qa * qb, WithinAbs(q::quaternion{-0.36, 0.06, 0.12, 0.12}));
 }
 
 TEST_CASE("cross product (Grassmann uneven product)")
@@ -112,6 +148,15 @@ TEST_CASE("norm")
     REQUIRE_THAT(q2.norm(), WithinAbs(5.477225575051661, 1E-6));
     REQUIRE_THAT(q3.norm(), WithinAbs(7.3484692283495345, 1E-6));
     REQUIRE_THAT(q4.norm(), WithinAbs(7.3484692283495345, 1E-6));
+}
+
+TEST_CASE("normalization")
+{
+    const auto qv = q::quaternion{sqrt(3), 2,3,3};
+    CHECK_THAT(qv.norm(), WithinAbs(5, 1E-6));
+    const auto qn = qv.normalize();
+    CHECK_THAT(qn.norm(), WithinAbs(1, 1E-6));
+    CHECK_THAT(qn, WithinAbs(q::quaternion{0.34641016151377546, 0.4, 0.6, 0.6}));
 }
 
 TEST_CASE("rotating x 90 degrees around z should give y")

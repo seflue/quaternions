@@ -1,6 +1,7 @@
 #ifndef QUATERNIONS_QUATERNION_H
 #define QUATERNIONS_QUATERNION_H
 #include <optional>
+#include <string>
 
 namespace quaternions {
     struct xyz {
@@ -22,17 +23,24 @@ namespace quaternions {
         const double z;
         quaternion static from_vector(xyz v);
         quaternion static from_rotation(rotation r);
+        std::string to_string() const;
         std::optional<xyz> to_xyz() const;
         rotation to_rotation() const;
         quaternion conjugated() const;
         quaternion cross(const quaternion& other) const;
         double dot(const quaternion& other) const;
         double norm() const;
+        quaternion normalize() const;
     };
 
     quaternion operator+(const quaternion& a, const quaternion& b);
     quaternion operator-(const quaternion& a, const quaternion& b);
     quaternion operator*(const quaternion& a, const quaternion& b);
+    quaternion operator*(const quaternion& q, const double s);
+    quaternion operator*(const double s, const quaternion& q);
+
+    bool almost_equal(double a, double b, double eps = 1E-12);
+    bool almost_equal(const quaternion& a, const quaternion& b, double eps = 1E-12);
 }
 
 #endif //QUATERNIONS_QUATERNION_H

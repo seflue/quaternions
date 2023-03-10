@@ -15,7 +15,7 @@ This is just a small finger exercise to get familiar with the algebraic rules of
 - [x] conversion from and to vector
 - [x] conversion from and to rotation
 - [x] norm (`.norm()`)
-- [ ] _normalization_
+- [x] normalization
 - [ ] _vector extraction_
 - [ ] _scalar extraction_
 - [ ] _inverse_

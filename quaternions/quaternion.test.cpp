@@ -182,12 +182,9 @@ TEST_CASE("rotating x 90 degrees around z should give y")
     const auto r = q::rotation{q::xyz{0, 0, 1}, M_PI_2};
     const auto qv = q::quaternion::from_vector(v);
     const auto qr = q::quaternion::from_rotation(r);
-    const auto q_rotated = qr * qv * qr.conjugated();
-    CHECK(q_rotated.to_xyz() != std::nullopt);
-    const auto v2 = q_rotated.to_xyz().value();
-    CHECK_THAT(v2.x, WithinAbs(0.0, 1E-6));
-    CHECK_THAT(v2.y, WithinAbs(1.0, 1E-6));
-    CHECK_THAT(v2.z, WithinAbs(0.0, 1E-6));
+    const auto q_rotated = qv.rotate(qr);
+    CHECK(q_rotated != std::nullopt);
+    CHECK_THAT(q_rotated.value(), WithinAbs(q::quaternion{0, 0, 1, 0}));
 }
 
 TEST_CASE("rotating z 90 degrees around x should give -y")
@@ -196,12 +193,9 @@ TEST_CASE("rotating z 90 degrees around x should give -y")
     const auto r = q::rotation{q::xyz{1, 0, 0}, M_PI_2};
     const auto qv = q::quaternion::from_vector(v);
     const auto qr = q::quaternion::from_rotation(r);
-    const auto q_rotated = qr * qv * qr.conjugated();
-    CHECK(q_rotated.to_xyz() != std::nullopt);
-    const auto v2 = q_rotated.to_xyz().value();
-    CHECK_THAT(v2.x, WithinAbs(0.0, 1E-6));
-    CHECK_THAT(v2.y, WithinAbs(-1.0, 1E-6));
-    CHECK_THAT(v2.z, WithinAbs(0.0, 1E-6));
+    const auto q_rotated = qv.rotate(qr);
+    CHECK(q_rotated != std::nullopt);
+    CHECK_THAT(q_rotated.value(), WithinAbs(q::quaternion{0, 0, -1, 0}));
 }
 
 TEST_CASE("rotating y 90 degrees around x should give z")
@@ -210,10 +204,17 @@ TEST_CASE("rotating y 90 degrees around x should give z")
     const auto r = q::rotation{q::xyz{1, 0, 0}, M_PI_2};
     const auto qv = q::quaternion::from_vector(v);
     const auto qr = q::quaternion::from_rotation(r);
-    const auto q_rotated = qr * qv * qr.conjugated();
-    CHECK(q_rotated.to_xyz() != std::nullopt);
-    const auto v2 = q_rotated.to_xyz().value();
-    CHECK_THAT(v2.x, WithinAbs(0.0, 1E-6));
-    CHECK_THAT(v2.y, WithinAbs(0.0, 1E-6));
-    CHECK_THAT(v2.z, WithinAbs(1.0, 1E-6));
+    const auto q_rotated = qv.rotate(qr);
+    CHECK(q_rotated != std::nullopt);
+    CHECK_THAT(q_rotated.value(), WithinAbs(q::quaternion{0, 0, 0, 1}));
+}
+
+TEST_CASE("not normalized rotation quaternion is not allowed")
+{
+    const auto v = q::xyz{1, 0, 0};
+    const auto r = q::rotation{q::xyz{0, 0, 2}, M_PI_2};
+    const auto qv = q::quaternion::from_vector(v);
+    const auto qr = q::quaternion::from_rotation(r);
+    const auto q_rotated = qv.rotate(qr);
+    CHECK(q_rotated == std::nullopt);
 }

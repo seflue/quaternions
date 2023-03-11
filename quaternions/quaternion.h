@@ -35,6 +35,7 @@ namespace quaternions {
         double dot(const quaternion& other) const;
         double norm() const;
         quaternion normalize() const;
+        std::optional<quaternion> rotate(const quaternion& r) const;
     };
 
     quaternion operator+(const quaternion& a, const quaternion& b);

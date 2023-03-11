@@ -20,7 +20,7 @@ This is just a small finger exercise to get familiar with the algebraic rules of
 - [x] scalar extraction
 - [x] inverse
 - [x] negation
-- [ ] _rotation_
+- [x] rotation
 - [ ] _direction_
 - [ ] _Euler angle representation_
 

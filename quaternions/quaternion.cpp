@@ -105,6 +105,12 @@ q::quaternion q::quaternion::normalize() const {
     };
 }
 
+std::optional<q::quaternion> q::quaternion::rotate(const q::quaternion& r) const {
+    if(!almost_equal(r.norm(), 1.0))
+        return std::nullopt;
+    return r * *this * r.conjugated();
+}
+
 q::quaternion q::operator+(const quaternion& a, const quaternion& b)
 {
     return q::quaternion{a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z};

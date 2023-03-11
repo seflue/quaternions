@@ -157,22 +157,34 @@ TEST_CASE("negate quaternion")
 
 TEST_CASE("norm")
 {
+    const auto q = q::quaternion{1, 2, 3, 4};
+    CHECK_THAT(q.norm(), WithinRel(1.0 + 4 + 9 + 16));
+}
+
+TEST_CASE("norm invariant")
+{
+    const auto q = q::quaternion{1, 2, 3, 4};
+    CHECK_THAT(q.norm(), WithinRel((q.conjugated() * q).extract_scalar()));
+}
+
+TEST_CASE("length")
+{
     const auto q1 = q::quaternion{1, 2, 3, 4};
     const auto q2 = q::quaternion{-1, -2, -3, -4};
     const auto q3 = q::quaternion{2, 3, 4, 5};
     const auto q4 = q::quaternion{2, -3, 4, -5};
-    REQUIRE_THAT(q1.norm(), WithinAbs(5.477225575051661, 1E-6));
-    REQUIRE_THAT(q2.norm(), WithinAbs(5.477225575051661, 1E-6));
-    REQUIRE_THAT(q3.norm(), WithinAbs(7.3484692283495345, 1E-6));
-    REQUIRE_THAT(q4.norm(), WithinAbs(7.3484692283495345, 1E-6));
+    CHECK_THAT(q1.length(), WithinAbs(5.477225575051661, 1E-6));
+    CHECK_THAT(q2.length(), WithinAbs(5.477225575051661, 1E-6));
+    CHECK_THAT(q3.length(), WithinAbs(7.3484692283495345, 1E-6));
+    CHECK_THAT(q4.length(), WithinAbs(7.3484692283495345, 1E-6));
 }
 
 TEST_CASE("normalization")
 {
     const auto qv = q::quaternion{sqrt(3), 2,3,3};
-    CHECK_THAT(qv.norm(), WithinAbs(5, 1E-6));
+    CHECK_THAT(qv.length(), WithinAbs(5, 1E-6));
     const auto qn = qv.normalize();
-    CHECK_THAT(qn.norm(), WithinAbs(1, 1E-6));
+    CHECK_THAT(qn.length(), WithinAbs(1, 1E-6));
     CHECK_THAT(qn, WithinAbs(q::quaternion{0.34641016151377546, 0.4, 0.6, 0.6}));
 }
 

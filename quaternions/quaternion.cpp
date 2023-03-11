@@ -92,11 +92,15 @@ double q::quaternion::dot(const quaternion &other) const {
 }
 
 double q::quaternion::norm() const {
-    return sqrt(w * w + x * x + y * y + z * z);
+    return dot(*this);
+}
+
+double q::quaternion::length() const {
+    return sqrt(norm());
 }
 
 q::quaternion q::quaternion::normalize() const {
-    const auto t_norm = norm();
+    const auto t_norm = length();
     return quaternion{
             w / t_norm,
             x / t_norm,
@@ -106,7 +110,7 @@ q::quaternion q::quaternion::normalize() const {
 }
 
 std::optional<q::quaternion> q::quaternion::rotate(const q::quaternion& r) const {
-    if(!almost_equal(r.norm(), 1.0))
+    if(!almost_equal(r.length(), 1.0))
         return std::nullopt;
     return r * *this * r.conjugated();
 }

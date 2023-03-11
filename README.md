@@ -14,6 +14,7 @@ This is just a small finger exercise to get familiar with the algebraic rules of
   - [ ] _Euclidean uneven product_
 - [x] conversion from and to vector
 - [x] conversion from and to rotation
+- [x] length (`.length()`)
 - [x] norm (`.norm()`)
 - [x] normalization
 - [x] vector extraction

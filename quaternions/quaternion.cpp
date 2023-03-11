@@ -55,7 +55,7 @@ q::rotation quaternions::quaternion::to_rotation() const {
     };
 }
 
-q::quaternion q::quaternion::inverse() const {
+q::quaternion q::quaternion::inverted() const {
     const auto amplitude_squared = w * w + x * x + y * y + z * z;
     const auto conj = conjugated();
     return quaternion{
@@ -99,7 +99,7 @@ double q::quaternion::length() const {
     return sqrt(norm());
 }
 
-q::quaternion q::quaternion::normalize() const {
+q::quaternion q::quaternion::normalized() const {
     const auto t_norm = length();
     return quaternion{
             w / t_norm,
@@ -125,7 +125,7 @@ double q::quaternion::polar_angle() const {
     return acos(scalar_val/(2*length()));
 }
 
-std::optional<q::quaternion> q::quaternion::rotate(const q::quaternion& r) const {
+std::optional<q::quaternion> q::quaternion::rotated(const q::quaternion& r) const {
     if(!almost_equal(r.length(), 1.0))
         return std::nullopt;
     return r * *this * r.conjugated();

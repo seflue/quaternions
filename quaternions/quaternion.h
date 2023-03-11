@@ -28,17 +28,17 @@ namespace quaternions {
         xyz extract_vector() const;
         double extract_scalar() const;
         rotation to_rotation() const;
-        quaternion inverse() const;
+        quaternion inverted() const;
         quaternion conjugated() const;
         quaternion operator-() const;
         quaternion cross(const quaternion& other) const;
         double dot(const quaternion& other) const;
         double norm() const;
         double length() const;
-        quaternion normalize() const;
+        quaternion normalized() const;
         quaternion polar_direction() const;
         double polar_angle() const;
-        std::optional<quaternion> rotate(const quaternion& r) const;
+        std::optional<quaternion> rotated(const quaternion& r) const;
     };
 
     quaternion operator+(const quaternion& a, const quaternion& b);

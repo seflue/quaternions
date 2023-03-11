@@ -129,13 +129,13 @@ TEST_CASE("dot product (euclidean inner product)") {
     CHECK_THAT(qy.dot(qz), WithinAbs(0, 1E-6));
 }
 
-TEST_CASE("inverse quaternion")
+TEST_CASE("inverted quaternion")
 {
     const auto q = q::quaternion{1, 2, 3, 4};
-    CHECK_THAT(q.inverse(), WithinAbs(q::quaternion{1/30.0, -1/15.0, -0.1, -2/15.0}));
-    const auto qn = q.normalize();
-    CHECK_THAT(qn.inverse(), WithinAbs(qn.conjugated()));
-    CHECK_THAT(qn * qn.inverse(), WithinAbs(q::quaternion{1, 0, 0, 0}));
+    CHECK_THAT(q.inverted(), WithinAbs(q::quaternion{1 / 30.0, -1 / 15.0, -0.1, -2 / 15.0}));
+    const auto qn = q.normalized();
+    CHECK_THAT(qn.inverted(), WithinAbs(qn.conjugated()));
+    CHECK_THAT(qn * qn.inverted(), WithinAbs(q::quaternion{1, 0, 0, 0}));
 }
 
 TEST_CASE("conjugate quaternion")
@@ -183,7 +183,7 @@ TEST_CASE("normalization")
 {
     const auto qv = q::quaternion{sqrt(3), 2,3,3};
     CHECK_THAT(qv.length(), WithinAbs(5, 1E-6));
-    const auto qn = qv.normalize();
+    const auto qn = qv.normalized();
     CHECK_THAT(qn.length(), WithinAbs(1, 1E-6));
     CHECK_THAT(qn, WithinAbs(q::quaternion{0.34641016151377546, 0.4, 0.6, 0.6}));
 }
@@ -194,7 +194,7 @@ TEST_CASE("rotating x 90 degrees around z should give y")
     const auto r = q::rotation{q::xyz{0, 0, 1}, M_PI_2};
     const auto qv = q::quaternion::from_vector(v);
     const auto qr = q::quaternion::from_rotation(r);
-    const auto q_rotated = qv.rotate(qr);
+    const auto q_rotated = qv.rotated(qr);
     CHECK(q_rotated != std::nullopt);
     CHECK_THAT(q_rotated.value(), WithinAbs(q::quaternion{0, 0, 1, 0}));
 }
@@ -205,7 +205,7 @@ TEST_CASE("rotating z 90 degrees around x should give -y")
     const auto r = q::rotation{q::xyz{1, 0, 0}, M_PI_2};
     const auto qv = q::quaternion::from_vector(v);
     const auto qr = q::quaternion::from_rotation(r);
-    const auto q_rotated = qv.rotate(qr);
+    const auto q_rotated = qv.rotated(qr);
     CHECK(q_rotated != std::nullopt);
     CHECK_THAT(q_rotated.value(), WithinAbs(q::quaternion{0, 0, -1, 0}));
 }
@@ -216,7 +216,7 @@ TEST_CASE("rotating y 90 degrees around x should give z")
     const auto r = q::rotation{q::xyz{1, 0, 0}, M_PI_2};
     const auto qv = q::quaternion::from_vector(v);
     const auto qr = q::quaternion::from_rotation(r);
-    const auto q_rotated = qv.rotate(qr);
+    const auto q_rotated = qv.rotated(qr);
     CHECK(q_rotated != std::nullopt);
     CHECK_THAT(q_rotated.value(), WithinAbs(q::quaternion{0, 0, 0, 1}));
 }
@@ -227,7 +227,7 @@ TEST_CASE("not normalized rotation quaternion is not allowed")
     const auto r = q::rotation{q::xyz{0, 0, 2}, M_PI_2};
     const auto qv = q::quaternion::from_vector(v);
     const auto qr = q::quaternion::from_rotation(r);
-    const auto q_rotated = qv.rotate(qr);
+    const auto q_rotated = qv.rotated(qr);
     CHECK(q_rotated == std::nullopt);
 }
 

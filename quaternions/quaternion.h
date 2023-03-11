@@ -36,10 +36,14 @@ namespace quaternions {
         double norm() const;
         double length() const;
         quaternion normalize() const;
+        quaternion polar_direction() const;
+        double polar_angle() const;
         std::optional<quaternion> rotate(const quaternion& r) const;
     };
 
     quaternion operator+(const quaternion& a, const quaternion& b);
+    quaternion operator+(const quaternion& q, const double s);
+    quaternion operator+(const double s, const quaternion& q);
     quaternion operator-(const quaternion& a, const quaternion& b);
     quaternion operator*(const quaternion& a, const quaternion& b);
     quaternion operator*(const quaternion& q, const double s);

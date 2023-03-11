@@ -230,3 +230,22 @@ TEST_CASE("not normalized rotation quaternion is not allowed")
     const auto q_rotated = qv.rotate(qr);
     CHECK(q_rotated == std::nullopt);
 }
+
+TEST_CASE("direction of a quaternion in polar form")
+{
+    const auto q = q::quaternion{2, 2, 4, 4};
+    const auto dir = q.polar_direction();
+    CHECK_THAT(dir, WithinAbs(q::quaternion{0, 1/3.0, 2/3.0, 2/3.0}));
+    CHECK_THAT(dir.length(), WithinRel(1.0));
+    CHECK_THAT(dir * dir, WithinAbs(q::quaternion{-1, 0, 0, 0}));
+}
+
+TEST_CASE("angle of a quaternion in polar form")
+{
+    const auto q = q::quaternion{2, 2, 4, 4};
+    const auto angle = q.polar_angle();
+    CHECK_THAT(angle, WithinAbs(1.2490457724, 1E-6));
+    const auto q_check =
+        q.length() * (cos(angle) + (q.polar_direction() * sin(angle)));
+    CHECK_THAT(q_check, WithinAbs(q));
+}

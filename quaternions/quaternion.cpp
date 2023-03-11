@@ -109,6 +109,22 @@ q::quaternion q::quaternion::normalize() const {
     };
 }
 
+q::quaternion q::quaternion::polar_direction() const {
+    const auto diff = *this - conjugated();
+    const auto length = diff.length();
+    return q::quaternion{
+        0,
+        diff.x / length,
+        diff.y / length,
+        diff.z / length,
+    };
+}
+
+double q::quaternion::polar_angle() const {
+    const auto scalar_val = (*this + conjugated()).extract_scalar();
+    return acos(scalar_val/(2*length()));
+}
+
 std::optional<q::quaternion> q::quaternion::rotate(const q::quaternion& r) const {
     if(!almost_equal(r.length(), 1.0))
         return std::nullopt;
@@ -118,6 +134,14 @@ std::optional<q::quaternion> q::quaternion::rotate(const q::quaternion& r) const
 q::quaternion q::operator+(const quaternion& a, const quaternion& b)
 {
     return q::quaternion{a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z};
+}
+
+q::quaternion q::operator+(const quaternion &q, const double s) {
+    return q + q::quaternion{s, 0, 0, 0};
+}
+
+q::quaternion q::operator+(const double s, const quaternion& q) {
+    return q + s;
 }
 
 q::quaternion q::operator-(const quaternion& a, const quaternion& b)

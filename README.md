@@ -22,7 +22,7 @@ This is just a small finger exercise to get familiar with the algebraic rules of
 - [x] inverse
 - [x] negation
 - [x] rotation
-- [ ] _direction_
+- [x] polar angle and direction
 - [ ] _Euler angle representation_
 
 # Further improvements

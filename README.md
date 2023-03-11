@@ -19,7 +19,9 @@ This is just a small finger exercise to get familiar with the algebraic rules of
 - [x] vector extraction
 - [x] scalar extraction
 - [x] inverse
-- [ ] _negation_
+- [x] negation
+- [ ] _rotation_
+- [ ] _direction_
 - [ ] _Euler angle representation_
 
 # Further improvements

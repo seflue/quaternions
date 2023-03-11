@@ -70,6 +70,10 @@ q::quaternion q::quaternion::conjugated() const {
     return q::quaternion{w, -x, -y, -z};
 }
 
+q::quaternion q::quaternion::operator-() const {
+    return q::quaternion{-w, -x, -y, -z};
+}
+
 q::quaternion q::quaternion::cross(const quaternion& other) const {
     return quaternion{
             0,
@@ -129,8 +133,12 @@ q::quaternion q::operator*(const quaternion& q, const double s) {
     };
 }
 
-q::quaternion q::operator*(const double s, const quaternion &q) {
+q::quaternion q::operator*(const double s, const quaternion& q) {
     return q * s;
+}
+
+bool q::operator==(const quaternion& a, const quaternion& b) {
+    return a.w == b.w && a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
 bool q::almost_equal(double a, double b, double eps) {

@@ -149,6 +149,12 @@ TEST_CASE("conjugate quaternion")
     CHECK(conjugated.z == -1);
 }
 
+TEST_CASE("negate quaternion")
+{
+    const auto q = q::quaternion{1, 2, 3, 4};
+    CHECK(-q == q::quaternion{-1, -2, -3, -4});
+}
+
 TEST_CASE("norm")
 {
     const auto q1 = q::quaternion{1, 2, 3, 4};

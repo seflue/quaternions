@@ -30,6 +30,7 @@ namespace quaternions {
         rotation to_rotation() const;
         quaternion inverse() const;
         quaternion conjugated() const;
+        quaternion operator-() const;
         quaternion cross(const quaternion& other) const;
         double dot(const quaternion& other) const;
         double norm() const;
@@ -42,6 +43,7 @@ namespace quaternions {
     quaternion operator*(const quaternion& q, const double s);
     quaternion operator*(const double s, const quaternion& q);
 
+    bool operator==(const quaternion& a, const quaternion& b);
     bool almost_equal(double a, double b, double eps = 1E-12);
     bool almost_equal(const quaternion& a, const quaternion& b, double eps = 1E-12);
 }

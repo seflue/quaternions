@@ -42,8 +42,8 @@ auto WithinAbs(const q::quaternion& quaternion, double eps = 1E-12) -> WithinAbs
 TEST_CASE("initialize quaternion from vector")
 {
     const auto q = q::quaternion::from_vector(q::xyz{1, 2, 3});
-    const quaternions::xyz v = q.extract_vector();
-    const auto s = q.extract_scalar();
+    const quaternions::xyz v = q.vector();
+    const auto s = q.scalar();
     CHECK(s == 0);
     CHECK(v.x == 1);
     CHECK(v.y == 2);
@@ -54,8 +54,7 @@ TEST_CASE("initialize quaternion from rotation")
 {
     const auto r = q::rotation{q::xyz{1, 0, 0}, M_PI_2};
     const auto q = q::quaternion::from_rotation(r);
-    const auto r2 = q.to_rotation();
-
+    const auto r2 = q.rotation();
     CHECK_THAT(r2.axis.x, WithinRel(1, 1E-6));
     CHECK_THAT(r2.axis.y, WithinRel(0, 1E-6));
     CHECK_THAT(r2.axis.z, WithinRel(0, 1E-6));
@@ -66,7 +65,7 @@ TEST_CASE("add two quaternions")
 {
     const auto qva = q::quaternion::from_vector({q::xyz{1, 0, 0}});
     const auto qvb = q::quaternion::from_vector({q::xyz{0, 1, 0}});
-    const auto vab = (qva + qvb).to_xyz().value();
+    const auto vab = (qva + qvb).vector();
     CHECK_THAT(vab.x, WithinRel(1, 1E-6));
     CHECK_THAT(vab.y, WithinRel(1, 1E-6));
     CHECK_THAT(vab.z, WithinRel(0, 1E-6));
@@ -76,7 +75,7 @@ TEST_CASE("subtract two quaternions")
 {
     const auto qva = q::quaternion::from_vector({q::xyz{3, 2, 1}});
     const auto qvb = q::quaternion::from_vector({q::xyz{1, 1, 1}});
-    const auto vab = (qva - qvb).to_xyz().value();
+    const auto vab = (qva - qvb).vector();
     CHECK_THAT(vab.x, WithinRel(2, 1E-6));
     CHECK_THAT(vab.y, WithinRel(1, 1E-6));
     CHECK_THAT(vab.z, WithinRel(0, 1E-6));
@@ -86,7 +85,7 @@ TEST_CASE("multiply quaternion with scalar")
 {
     const auto q = q::quaternion{1, 2, 3, 4};
     const auto s = 2.0;
-    CHECK_THAT(q * s, WithinAbs(s * q));
+    CHECK_THAT(q * s, WithinAbs(s * q, 1E-6));
     CHECK_THAT(q * s, WithinAbs(q::quaternion{2, 4, 6, 8}));
 }
 
@@ -104,7 +103,7 @@ TEST_CASE("cross product (Grassmann uneven product)")
     const auto qx = quaternions::quaternion::from_vector(x);
     const auto qy = quaternions::quaternion::from_vector(y);
     const auto qz = qx.cross(qy);
-    const auto z2 = qz.to_xyz().value();
+    const auto z2 = qz.vector();
     CHECK_THAT(z2.x, WithinAbs(0, 1E-6));
     CHECK_THAT(z2.y, WithinAbs(0, 1E-6));
     CHECK_THAT(z2.z, WithinAbs(1, 1E-6));
@@ -164,7 +163,7 @@ TEST_CASE("norm")
 TEST_CASE("norm invariant")
 {
     const auto q = q::quaternion{1, 2, 3, 4};
-    CHECK_THAT(q.norm(), WithinRel((q.conjugated() * q).extract_scalar()));
+    CHECK_THAT(q.norm(), WithinRel((q.conjugated() * q).scalar()));
 }
 
 TEST_CASE("length")

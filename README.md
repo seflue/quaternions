@@ -19,6 +19,7 @@ This is just a small finger exercise to get familiar with the algebraic rules of
 - [x] normalization
 - [x] vector extraction
 - [x] scalar extraction
+- [x] axis and rotation angle
 - [x] inverse
 - [x] negation
 - [x] rotation

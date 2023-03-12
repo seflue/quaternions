@@ -24,10 +24,9 @@ namespace quaternions {
         quaternion static from_vector(xyz v);
         quaternion static from_rotation(rotation r);
         std::string to_string() const;
-        std::optional<xyz> to_xyz() const;
-        xyz extract_vector() const;
-        double extract_scalar() const;
-        rotation to_rotation() const;
+        xyz vector() const;
+        double scalar() const;
+        rotation rotation() const;
         quaternion inverted() const;
         quaternion conjugated() const;
         quaternion operator-() const;

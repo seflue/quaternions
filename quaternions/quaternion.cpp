@@ -8,7 +8,7 @@ q::quaternion q::quaternion::quaternion::from_vector(xyz v) {
     return quaternion{0, v.x, v.y, v.z};
 }
 
-q::quaternion q::quaternion::from_rotation(rotation r) {
+q::quaternion q::quaternion::from_rotation(q::rotation r) {
     return quaternion{
         cos(r.angle / 2.),
         r.axis.x * sin(r.angle / 2.),
@@ -27,26 +27,18 @@ std::string q::quaternion::to_string() const
         " }";
 }
 
-std::optional<q::xyz> q::quaternion::to_xyz() const
-{
-    if(w != 0)
-        return std::nullopt;
-    else
-        return xyz{x, y, z};
-}
-
-q::xyz q::quaternion::extract_vector() const
+q::xyz q::quaternion::vector() const
 {
     return xyz{x, y, z};
 }
 
-double q::quaternion::extract_scalar() const
+double q::quaternion::scalar() const
 {
     return w;
 }
 
-q::rotation quaternions::quaternion::to_rotation() const {
-    return rotation{
+q::rotation quaternions::quaternion::rotation() const {
+    return q::rotation{
         xyz{
                 x / sqrt(1 - w * w),
                 y / sqrt(1 - w * w),
@@ -121,7 +113,7 @@ q::quaternion q::quaternion::polar_direction() const {
 }
 
 double q::quaternion::polar_angle() const {
-    const auto scalar_val = (*this + conjugated()).extract_scalar();
+    const auto scalar_val = (*this + conjugated()).scalar();
     return acos(scalar_val/(2*length()));
 }
 

@@ -248,3 +248,22 @@ TEST_CASE("angle of a quaternion in polar form")
         q.length() * (cos(angle) + (q.polar_direction() * sin(angle)));
     CHECK_THAT(q_check, WithinAbs(q));
 }
+
+TEST_CASE("combine rotations")
+{
+    const auto r1 = q::rotation{q::xyz{0, 0, 1}, M_PI_2};
+    const auto r2 = q::rotation{q::xyz{1, 0, 0}, M_PI_2};
+    const auto qr =
+            (q::quaternion::from_rotation(r2) * q::quaternion::from_rotation(r1));
+    const auto v = q::quaternion::from_vector({1, 0, 0}).rotated(qr)->vector();
+    CHECK_THAT(v.x, WithinAbs(0., 1E-12));
+    CHECK_THAT(v.y, WithinAbs(0., 1E-12));
+    CHECK_THAT(v.z, WithinRel(1.));
+
+    const auto [axis, angle] = qr.rotation();
+    const auto expected_axis = q::xyz{1, -1, 1}.normalized();
+    CHECK_THAT(axis.x, WithinAbs(expected_axis.x, 1E-12));
+    CHECK_THAT(axis.y, WithinAbs(expected_axis.y, 1E-12));
+    CHECK_THAT(axis.z, WithinAbs(expected_axis.z, 1E-12));
+    CHECK_THAT(angle, WithinAbs(2*M_PI/3.0, 1E-12));
+}

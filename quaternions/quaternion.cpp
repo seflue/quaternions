@@ -4,6 +4,23 @@
 
 namespace q = quaternions;
 
+double quaternions::xyz::norm() const { return x*x + y*y + z*z; }
+
+double quaternions::xyz::length() const { return std::sqrt(norm()); }
+
+quaternions::xyz quaternions::xyz::normalized() const {
+    return norm() == 1
+       ? *this
+       : [&](){
+            const auto length = this->length();
+            return xyz {
+                    x/length,
+                    y/length,
+                    z/length,
+            };
+        }();
+}
+
 q::quaternion q::quaternion::quaternion::from_vector(xyz v) {
     return quaternion{0, v.x, v.y, v.z};
 }
@@ -38,11 +55,13 @@ double q::quaternion::scalar() const
 }
 
 q::rotation quaternions::quaternion::rotation() const {
+    auto const divisor = sqrt(1 - w * w);
     return q::rotation{
         xyz{
-                x / sqrt(1 - w * w),
-                y / sqrt(1 - w * w),
-                z / sqrt(1 - w * w)},
+            (x / divisor),
+            (y / divisor),
+            (z / divisor)
+        },
         2 * acos(w)
     };
 }

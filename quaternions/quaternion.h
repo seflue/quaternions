@@ -8,6 +8,9 @@ namespace quaternions {
         double x;
         double y;
         double z;
+        double norm() const;
+        double length() const;
+        xyz normalized() const;
     };
 
     struct rotation {

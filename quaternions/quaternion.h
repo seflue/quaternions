@@ -2,17 +2,9 @@
 #define QUATERNIONS_QUATERNION_H
 #include <optional>
 #include <string>
+#include "xyz.h"
 
 namespace quaternions {
-    struct xyz {
-        double x;
-        double y;
-        double z;
-        double norm() const;
-        double length() const;
-        xyz normalized() const;
-    };
-
     struct rotation {
         xyz axis;
         double angle;
@@ -20,11 +12,11 @@ namespace quaternions {
 
     class quaternion {
     public:
-        const double w;
-        const double x;
-        const double y;
-        const double z;
-        quaternion static from_vector(xyz v);
+        double w;
+        double x;
+        double y;
+        double z;
+        quaternion static from_vector(const xyz& v);
         quaternion static from_rotation(rotation r);
         std::string to_string() const;
         xyz vector() const;

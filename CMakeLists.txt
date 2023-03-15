@@ -21,7 +21,11 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-file(GLOB TEST_SOURCES ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*.test.cpp)
+file(GLOB TEST_SOURCES
+    ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*.test.cpp
+    ${PROJECT_SOURCE_DIR}/test/helpers.h
+    ${PROJECT_SOURCE_DIR}/test/helpers.cpp
+)
 add_executable(tests ${TEST_SOURCES})
 target_link_libraries(tests
     PRIVATE quaternions

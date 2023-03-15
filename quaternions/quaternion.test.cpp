@@ -2,42 +2,13 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
 #include "quaternion.h"
+#include "xyz.h"
 #include <cmath>
+#include "../test/helpers.h"
 
 namespace q = quaternions;
 using Catch::Matchers::WithinRel;
 using Catch::Matchers::WithinAbs;
-
-namespace Catch{
-    template<>
-    struct StringMaker<q::quaternion> {
-        static std::string convert(const q::quaternion& q) {
-            return q.to_string();
-        }
-    };
-}
-
-struct WithinAbsQuaternionMatcher : Catch::Matchers::MatcherGenericBase {
-    WithinAbsQuaternionMatcher(q::quaternion const& quaternion, double eps)
-        : quaternion{quaternion}, eps{eps} {}
-
-    template<typename OtherQuaternion>
-    bool match(OtherQuaternion const& other) const {
-        return q::almost_equal(quaternion, other, eps);
-    }
-
-    std::string describe() const override {
-        return "Equals: " + quaternion.to_string();
-    }
-
-private:
-    const q::quaternion& quaternion;
-    const double eps;
-};
-
-auto WithinAbs(const q::quaternion& quaternion, double eps = 1E-12) -> WithinAbsQuaternionMatcher {
-    return WithinAbsQuaternionMatcher{quaternion, eps};
-}
 
 TEST_CASE("initialize quaternion from vector")
 {

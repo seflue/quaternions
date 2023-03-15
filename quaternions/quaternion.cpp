@@ -1,27 +1,11 @@
 #include "quaternion.h"
+#include "xyz.h"
 #include <cmath>
 #include <string>
 
 namespace q = quaternions;
 
-double quaternions::xyz::norm() const { return x*x + y*y + z*z; }
-
-double quaternions::xyz::length() const { return std::sqrt(norm()); }
-
-quaternions::xyz quaternions::xyz::normalized() const {
-    return norm() == 1
-       ? *this
-       : [&](){
-            const auto length = this->length();
-            return xyz {
-                    x/length,
-                    y/length,
-                    z/length,
-            };
-        }();
-}
-
-q::quaternion q::quaternion::quaternion::from_vector(xyz v) {
+q::quaternion q::quaternion::from_vector(const xyz& v) {
     return quaternion{0, v.x, v.y, v.z};
 }
 
@@ -184,10 +168,6 @@ q::quaternion q::operator*(const double s, const quaternion& q) {
 
 bool q::operator==(const quaternion& a, const quaternion& b) {
     return a.w == b.w && a.x == b.x && a.y == b.y && a.z == b.z;
-}
-
-bool q::almost_equal(double a, double b, double eps) {
-    return std::abs(a - b) < eps;
 }
 
 bool q::almost_equal(const q::quaternion& a, const q::quaternion& b, double eps) {

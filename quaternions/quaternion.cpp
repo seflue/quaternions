@@ -126,6 +126,14 @@ std::optional<q::quaternion> q::quaternion::rotated(const q::quaternion& r) cons
     return r * *this * r.conjugated();
 }
 
+q::matrix_3x3 q::quaternion::to_matrix() const {
+    return {
+        {1 - 2 * (y * y + z * z), 2 * (x * y + z * w), 2 * (x * z - y * w)},
+        {2 * (x * y - z * w), 1 - 2 * (x * x + z * z), 2 * (y * z + x * w)},
+        {2 * (x * z + y * w), 2 * (y * z - x * w), 1 - 2 * (x * x + y * y)},
+    };
+}
+
 q::quaternion q::operator+(const quaternion& a, const quaternion& b)
 {
     return q::quaternion{a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z};

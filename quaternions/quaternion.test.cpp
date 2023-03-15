@@ -238,3 +238,31 @@ TEST_CASE("combine rotations")
     CHECK_THAT(axis.z, WithinAbs(expected_axis.z, 1E-12));
     CHECK_THAT(angle, WithinAbs(2*M_PI/3.0, 1E-12));
 }
+
+TEST_CASE("rotation matrix: rotating pi/4 around x")
+{
+    const auto qr = q::quaternion::from_rotation({{1, 0, 0}, M_PI_4});
+    const auto mr = qr.to_matrix();
+    CHECK_THAT(mr.c1, WithinAbs(q::xyz{1, 0, 0}));
+    CHECK_THAT(mr.c2, WithinAbs(q::xyz{0, std::cos(M_PI_4), std::sin(M_PI_4)}));
+    CHECK_THAT(mr.c3, WithinAbs(q::xyz{0, -std::sin(M_PI_4), std::cos(M_PI_4)}));
+}
+
+TEST_CASE("rotation matrix: rotating pi/4 around y")
+{
+    const auto qr = q::quaternion::from_rotation({{0, 1, 0}, M_PI_4});
+    const auto mr = qr.to_matrix();
+    CHECK_THAT(mr.c1, WithinAbs(q::xyz{std::cos(M_PI_4), 0, -std::sin(M_PI_4)}));
+    CHECK_THAT(mr.c2, WithinAbs(q::xyz{0, 1, 0}));
+    CHECK_THAT(mr.c3, WithinAbs(q::xyz{std::sin(M_PI_4), 0, std::cos(M_PI_4)}));
+}
+
+TEST_CASE("rotation matrix: rotating pi/4 around z")
+{
+    const auto qr = q::quaternion::from_rotation({{0, 0, 1}, M_PI_4});
+    const auto mr = qr.to_matrix();
+    CHECK_THAT(mr.c1, WithinAbs(q::xyz{std::cos(M_PI_4), std::sin(M_PI_4), 0}));
+    CHECK_THAT(mr.c2, WithinAbs(q::xyz{-std::sin(M_PI_4), std::cos(M_PI_4), 0}));
+    CHECK_THAT(mr.c3, WithinAbs(q::xyz{0, 0, 1}));
+}
+

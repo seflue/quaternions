@@ -33,6 +33,7 @@ namespace quaternions {
         quaternion polar_direction() const;
         double polar_angle() const;
         std::optional<quaternion> rotated(const quaternion& r) const;
+        matrix_3x3 to_matrix() const;
     };
 
     quaternion operator+(const quaternion& a, const quaternion& b);
